@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <string.h>
+ 
+#define MAX_STUDENTS 50
+#define SUBJECTS 5
+ 
+struct Student {
+    int rollNo;
+    char name[50];
+    float marks[SUBJECTS];
+    float total;
+    float average;
+    char grade;
+};
+ 
+void calculateResult(struct Student *s) {
+    int i;
+    s->total = 0;
+ 
+    for (i = 0; i < SUBJECTS; i++) {
+        s->total += s->marks[i];
+    }
+ 
+    s->average = s->total / SUBJECTS;
+ 
+    if (s->average >= 90)
+        s->grade = 'A';
+    else if (s->average >= 80)
+        s->grade = 'B';
+    else if (s->average >= 70)
+        s->grade = 'C';
+    else if (s->average >= 60)
+        s->grade = 'D';
+    else if (s->average >= 40)
+        s->grade = 'E';
+    else
+        s->grade = 'F';
+}
+ 
+int main(void) {
+    struct Student students[MAX_STUDENTS];
+    int n, i, j;
+ 
+    printf("STUDENT RECORD AND GRADE SYSTEM\n");
+    printf("Enter number of students (1-%d): ", MAX_STUDENTS);
+    if (scanf("%d", &n) != 1 || n < 1 || n > MAX_STUDENTS) {
+        printf("Invalid number of students.\\n");
+        return 1;
+    }
+ 
+    for (i = 0; i < n; i++) {
+        printf("\nEnter details for student %d\n", i + 1);
+ 
+        printf("Roll number: ");
+        scanf("%d", &students[i].rollNo);
+ 
+        printf("Name (without spaces): ");
+        scanf("%49s", students[i].name);
+ 
+        students[i].total = 0;
+        for (j = 0; j < SUBJECTS; j++) {
+            do {
+                printf("Marks in subject %d (0-100): ", j + 1);
+                if (scanf("%f", &students[i].marks[j]) != 1) {
+                    printf("Invalid input. Please enter a number.\\n");
+                    return 1;
+                }
+                if (students[i].marks[j] < 0 ||
+                    students[i].marks[j] > 100) {
+                    printf("Marks must be between 0 and 100.\\n");
+                }
+            } while (students[i].marks[j] < 0 ||
+                     students[i].marks[j] > 100);
+        }
+ 
+        calculateResult(&students[i]);
+    }
+ 
+    printf("\\n========== STUDENT RESULT SHEET ==========\\n");
+    printf("%-8s %-15s %-10s %-10s %-6s\\n",
+           "Roll No", "Name", "Total", "Average", "Grade");
+ 
+    for (i = 0; i < n; i++) {
+        printf("%-8d %-15s %-10.2f %-10.2f %-6c\\n",
+               students[i].rollNo,
+               students[i].name,
+               students[i].total,
+               students[i].average,
+               students[i].grade);
+    }
+ 
+    return 0;
+}
+
+ 
